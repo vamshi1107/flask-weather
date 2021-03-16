@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather</title>
+    <link rel="icon" href="https://firebasestorage.googleapis.com/v0/b/databasedemo-458be.appspot.com/o/iconfinder_weather-02_1530391.png?alt=media&token=23d43dff-6225-4c7d-b818-4e37c9599555">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap');
+        .con{
+          background:linear-gradient(45deg,#0f0b93,#e4e2de);
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          justify-content:space-around;
+          width:100vw;
+          height:100vh;
+        }
+        body{
+          margin:0px;
+          padding:0px;
+        }
+        .search{
+          width:400px;
+          height:50px;
+          border-radius:10px;
+          outline:none;
+          border:1px solid grey;
+          margin-bottom:150px;
+          background-color:white;
+          opacity:80%;
+          font-family: 'Poppins', sans-serif;
+        }
+        .temp{
+          font-size:100px;
+          color:white;
+          font-family: 'Poppins', sans-serif;
+          display:flex;
+          flex-direction:row;
+          justify-content:center;
+        }
+        .place{
+          color:white;
+          font-family: 'Poppins', sans-serif;
+          text-transform:capitalize;
+        }
+        .temp > .wob_t{
+           display:inline;
+           font-size:40px;
+           margin-top:20px;
+        }
+        .loc{
+           display:flex;
+          flex-direction:row;
+        }
+        @keyframes morning{
+          0%{
+                    background:linear-gradient(0deg,blue,orange);
+
+          }
+           10%{
+                     background:linear-gradient(40deg,blue,orange);
+
+          }
+           20%{
+                     background:linear-gradient(80deg,blue,orange);
+
+          }
+          30%{
+                     background:linear-gradient(120deg,blue,orange);
+
+          }
+          40%{
+                     background:linear-gradient(160deg,blue,orange);
+
+          }
+          50%{
+                     background:linear-gradient(200deg,blue,orange);
+
+          }
+           60%{
+                     background:linear-gradient(240deg,blue,orange);
+
+          }
+          70%{
+                     background:linear-gradient(280deg,blue,orange);
+
+          }
+           80%{
+                     background:linear-gradient(320deg,blue,orange);
+
+          }
+          90%{
+                     background:linear-gradient(360deg,blue,orange);
+
+          }
+           100%{
+                     background:linear-gradient(0deg,blue,orange);
+
+          }
+        }
+        #err{
+            color:white;
+          font-family: 'Poppins', sans-serif;
+          font-size:25px;
+        }
+        .inf{
+          display:flex;
+          flex-direction:row;
+          width:60vw;
+          margin-left:auto;
+          margin-right:auto;
+          justify-content:space-around;
+        }
+        .info{
+          text-align:center;
+          width:100px;
+          height:100px;
+        }
+        .heading{
+          font-size:20px;
+          font-family: 'Poppins', sans-serif;
+          color:white;
+        }
+        .hin{
+          font-size:15px;
+          font-family: 'Poppins', sans-serif;
+          color:white;
+        }
+       #condi{
+         text-transform:capitalize;
+       }
+    </style>
+</head>
+<body>
+<div class="con">
+    {% if found %}
+      <div class="loc">
+          <img height="20px" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDM2OC4xNiAzNjguMTYiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTIiIHhtbDpzcGFjZT0icHJlc2VydmUiIGNsYXNzPSIiPjxnPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgoJPGc+CgkJPGc+CgkJCTxwYXRoIGQ9Ik0xODQuMDgsMGMtNzQuOTkyLDAtMTM2LDYxLjAwOC0xMzYsMTM2YzAsMjQuNjg4LDExLjA3Miw1MS4yNCwxMS41MzYsNTIuMzZjMy41NzYsOC40ODgsMTAuNjMyLDIxLjY3MiwxNS43MiwyOS40ICAgICBsOTMuMjQ4LDE0MS4yODhjMy44MTYsNS43OTIsOS40NjQsOS4xMTIsMTUuNDk2LDkuMTEyczExLjY4LTMuMzIsMTUuNDk2LTkuMTA0bDkzLjI1Ni0xNDEuMjk2ICAgICBjNS4wOTYtNy43MjgsMTIuMTQ0LTIwLjkxMiwxNS43Mi0yOS40YzAuNDY0LTEuMTEyLDExLjUyOC0yNy42NjQsMTEuNTI4LTUyLjM2QzMyMC4wOCw2MS4wMDgsMjU5LjA3MiwwLDE4NC4wOCwweiAgICAgIE0yOTMuOCwxODIuMTUyYy0zLjE5Miw3LjYwOC05Ljc2LDE5Ljg3Mi0xNC4zMjgsMjYuOGwtOTMuMjU2LDE0MS4yOTZjLTEuODQsMi43OTItMi40MjQsMi43OTItNC4yNjQsMEw4OC42OTYsMjA4Ljk1MiAgICAgYy00LjU2OC02LjkyOC0xMS4xMzYtMTkuMi0xNC4zMjgtMjYuODA4Qzc0LjIzMiwxODEuODE2LDY0LjA4LDE1Ny4zNzYsNjQuMDgsMTM2YzAtNjYuMTY4LDUzLjgzMi0xMjAsMTIwLTEyMCAgICAgYzY2LjE2OCwwLDEyMCw1My44MzIsMTIwLDEyMEMzMDQuMDgsMTU3LjQwOCwyOTMuOTA0LDE4MS45MTIsMjkzLjgsMTgyLjE1MnoiIGZpbGw9IiNmZmY3ZjciIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIHN0eWxlPSIiIGNsYXNzPSIiPjwvcGF0aD4KCQkJPHBhdGggZD0iTTE4NC4wOCw2NC4wMDhjLTM5LjcwNCwwLTcyLDMyLjMwNC03Miw3MmMwLDM5LjY5NiwzMi4yOTYsNzIsNzIsNzJjMzkuNzA0LDAsNzItMzIuMzA0LDcyLTcyICAgICBDMjU2LjA4LDk2LjMxMiwyMjMuNzg0LDY0LjAwOCwxODQuMDgsNjQuMDA4eiBNMTg0LjA4LDE5Mi4wMDhjLTMwLjg3MiwwLTU2LTI1LjEyLTU2LTU2czI1LjEyOC01Niw1Ni01NnM1NiwyNS4xMiw1Niw1NiAgICAgUzIxNC45NTIsMTkyLjAwOCwxODQuMDgsMTkyLjAwOHoiIGZpbGw9IiNmZmY3ZjciIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIHN0eWxlPSIiIGNsYXNzPSIiPjwvcGF0aD4KCQk8L2c+Cgk8L2c+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPC9nPjwvc3ZnPg==" />
+           <div class="place">{{weather.name}} , {{weather.sys.country}}</div>
+      </div>
+      <div class="hin" id="condi">{{weather.weather[0].description}}</div>
+    {% endif %}
+    {% if not found %}
+      <div id="err">Search City</div>
+    {% endif %}
+<div class="temp">
+    {% if found %}
+    <div>{{weather.main.temp}}</div>
+    <span class="wob_t"  aria-label="°Celsius" aria-disabled="true" role="button">°C</span>
+    {% endif %}
+</div>
+    <input type="hidden" value="{{weather.l_time}}" id="time">
+    <input type="hidden" value="{{weather.name}}" id="city">
+    {% if found %}
+    <div class="inf">
+     <div class="info">
+         <div class="heading">Pressure</div>
+         <div class="hin">{{weather.main.pressure}}</div>
+     </div>
+     <div class="info">
+         <div class="heading" >Humidity</div>
+         <div class="hin">{{weather.main.humidity}}</div>
+     </div>
+     <div class="info">
+         <div class="heading">Visibility</div>
+         <div class="hin">{{weather.visibility}}</div>
+     </div>
+ </div>
+     {% endif %}
+<form method="post" action="/" autocomplete="off">
+    <input name="city" type="text" class="search" placeholder="Search City">
+</form>
+</div>
+<script>
+  run()
+  function run(){
+    var place=document.getElementById("city").value
+    var k="time?city="+place
+    fetch(k).then(res=>res.text()).then(data=>{
+        var time=data
+            console.log(time)
+    var con=document.querySelector(".con")
+    time=time.split(" ")
+    var hour=parseInt(time[0].split(":")[0])
+    var dn=time[1]
+    if(dn==="pm"){
+      hour=hour+12
+    }
+    if(dn==="am" && hour==12){
+       hour=hour-12
+    }
+   if(hour>=0 && hour <=5){
+     con.style.background="linear-gradient(45deg,#070707, #353333)"
+   }
+   if(hour>=6 && hour <=8){
+     con.style.background="linear-gradient(45deg,#blue, #6c5d42)"
+   }
+   if(hour==19){
+     con.style.background="linear-gradient(45deg,blue,#2c2923)"
+   }
+   if(hour>=9 && hour<12){
+     con.style.background="linear-gradient(45deg,blue,orange)"
+   }
+   if(hour>=12 && hour<=13){
+     con.style.background="linear-gradient(90deg,blue,orange)"
+   }
+   if(hour>=15 && hour<=17){
+     con.style.background="linear-gradient(320deg,blue,orange)"
+   }
+   if(hour>=18 && hour<19){
+     con.style.background="linear-gradient(255deg,blue,orange)"
+   }
+   if(hour>=20 && hour<=21){
+     con.style.background="linear-gradient(255deg,#191960, rgb(0 0 0))"
+   }
+   if(hour>=22 && hour <=23){
+     con.style.background="linear-gradient(45deg,#070707, #353333)"
+   }
+   })
+   }
+setInterval(()=>{
+
+ run()
+ window.location.reload()
+},3600000)
+
+</script>
+</body>
+</html>
