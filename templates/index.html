@@ -179,37 +179,40 @@
     var k="time?city="+place
     fetch(k).then(res=>res.text()).then(data=>{
         var time=data
-            console.log(time)
     var con=document.querySelector(".con")
     time=time.split(" ")
     var hour=parseInt(time[0].split(":")[0])
     var dn=time[1]
-    if(dn==="pm"){
+    if(dn==="pm" && hour !=12){
       hour=hour+12
     }
     if(dn==="am" && hour==12){
        hour=hour-12
     }
+    console.log(hour)
    if(hour>=0 && hour <=5){
      con.style.background="linear-gradient(45deg,#070707, #353333)"
    }
    if(hour>=6 && hour <=8){
      con.style.background="linear-gradient(45deg,#blue, #6c5d42)"
    }
-   if(hour==19){
-     con.style.background="linear-gradient(45deg,blue,#2c2923)"
-   }
    if(hour>=9 && hour<12){
      con.style.background="linear-gradient(45deg,blue,orange)"
    }
    if(hour>=12 && hour<=13){
-     con.style.background="linear-gradient(90deg,blue,orange)"
+     con.style.background="linear-gradient(0deg,blue,orange)"
+   }
+   if(hour>13 && hour<15){
+     con.style.background="linear-gradient(335deg,blue,orange)"
    }
    if(hour>=15 && hour<=17){
      con.style.background="linear-gradient(320deg,blue,orange)"
    }
    if(hour>=18 && hour<19){
      con.style.background="linear-gradient(255deg,blue,orange)"
+   }
+    if(hour==19){
+     con.style.background="linear-gradient(45deg,blue,#2c2923)"
    }
    if(hour>=20 && hour<=21){
      con.style.background="linear-gradient(255deg,#191960, rgb(0 0 0))"
